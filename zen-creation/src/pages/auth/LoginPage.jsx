@@ -21,22 +21,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-row">
+    <div className="min-h-screen flex flex-col md:flex-row">
       {/* LEFT SIDE */}
-      <div className="w-1/2 bg-[#1E1E1E] flex flex-col items-center justify-center px-10">
+      <div className="w-full md:w-1/2 bg-[#1E1E1E] flex flex-col items-center justify-center px-6 md:px-10 py-10">
         <h1 className="text-white text-3xl font-serif mb-2">Login</h1>
         <div className="w-20 border-b-2 border-yellow-600 mb-6"></div>
 
         {/* LOGO BOX */}
-        <div className="border border-gray-500 p-6 mb-6">
-          <img src="/logo.png" alt="logo" className="w-28" />
-          <p className="text-white text-center mt-2 text-sm">
+        <div className="border border-gray-500 p-6 mb-6 text-center">
+          <img src="/logo.png" alt="logo" className="w-24 mx-auto" />
+          <p className="text-white mt-2 text-sm">
             Zen Creation <br /> Inventory Management System
           </p>
         </div>
 
-        {/* LEFT SIDE TEXT LIST */}
-        <div className="space-y-4 text-white text-sm mt-4">
+        {/* TEXT LIST */}
+        <div className="space-y-3 text-white text-sm mt-4 text-center md:text-left">
           <p>
             • <b>Stay Organized.</b> Keep everything under control.
           </p>
@@ -50,10 +50,10 @@ export default function LoginPage() {
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="w-1/2 bg-[#F5F3EE] flex flex-col items-center justify-center px-20">
-        <h1 className="text-3xl font-serif mb-8">Welcome Back!</h1>
+      <div className="w-full md:w-1/2 bg-[#F5F3EE] flex flex-col items-center justify-center px-6 md:px-20 py-10">
+        <h1 className="text-3xl font-serif mb-8 text-center">Welcome Back!</h1>
 
-        <form onSubmit={handleSubmit} className="w-full space-y-6">
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
           {/* Name */}
           <div>
             <label className="block text-sm mb-1">Name :</label>
@@ -86,14 +86,14 @@ export default function LoginPage() {
             <span className="text-xs">Keep me logged in?</span>
           </div>
 
-          {/* Submit button */}
-          <button className="w-full bg-gray-500 text-white py-3 rounded">
+          {/* Submit */}
+          <button className="w-full bg-gray-600 hover:bg-gray-700 text-white py-3 rounded">
             Submit
           </button>
         </form>
 
         {/* Footer links */}
-        <div className="flex w-full justify-between text-xs mt-4">
+        <div className="flex w-full max-w-md justify-between text-xs mt-4">
           <button
             onClick={() => navigate("/signup")}
             className="text-gray-700 hover:underline"

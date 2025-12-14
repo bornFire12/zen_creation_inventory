@@ -17,25 +17,23 @@ export default function SignupPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate("/signup/success");
-  };
-  const onclick = (e) => {
+  const handleNext = () => {
     navigate("/NextSignup");
   };
 
   return (
-    <div className="min-h-screen flex">
+    // 🔹 flex-col on mobile, flex-row on large screens
+    <div className="min-h-screen flex flex-col lg:flex-row">
       {/* LEFT SIDE */}
-      <div className="w-1/2 bg-[#1f1f1f] px-16 py-14">
+      {/* 🔹 Full width on mobile, half on large screens */}
+      <div className="w-full lg:w-1/2 bg-[#1f1f1f] px-6 sm:px-10 lg:px-16 py-10 lg:py-14">
         {/* Heading */}
-        <h2 className="text-center text-4xl font-semibold text-white mb-10 border-b pb-3 border-yellow-700 tracking-wide">
+        <h2 className="text-center text-3xl sm:text-4xl font-semibold text-white mb-10 border-b pb-3 border-yellow-700 tracking-wide">
           Let’s get Started
         </h2>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form className="space-y-8">
           {/* Full Name */}
           <div>
             <label className="text-white block mb-2">Full Name :</label>
@@ -49,9 +47,10 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* Password + Confirm Password */}
-          <div className="flex gap-6">
-            <div className="w-1/2">
+          {/* Password Section */}
+          {/* 🔹 Stack vertically on mobile, row on desktop */}
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className="w-full">
               <label className="text-white block mb-2">Password :</label>
               <input
                 className="w-full p-3 border bg-black border-gray-600 text-white rounded"
@@ -64,7 +63,7 @@ export default function SignupPage() {
               />
             </div>
 
-            <div className="w-1/2">
+            <div className="w-full">
               <label className="text-white block mb-2">
                 Confirm Password :
               </label>
@@ -80,21 +79,21 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {/* Email Address */}
+          {/* Email */}
           <div>
             <label className="text-white block mb-2">Email Address :</label>
             <input
               className="w-full p-3 border bg-black border-gray-600 text-white rounded"
               name="email"
               type="email"
-              placeholder="Prason@gmail.com"
+              placeholder="prason@gmail.com"
               value={formData.email}
               onChange={handleChange}
               required
             />
           </div>
 
-          {/* Contact Number */}
+          {/* Contact */}
           <div>
             <label className="text-white block mb-2">Contact Number :</label>
             <input
@@ -110,15 +109,15 @@ export default function SignupPage() {
 
           {/* Next Button */}
           <button
-            type="submit"
-            onClick={onclick}
+            type="button"
+            onClick={handleNext}
             className="w-full bg-gray-500 hover:bg-gray-600 text-white py-3 rounded text-lg font-medium mt-6"
           >
             Next →
           </button>
         </form>
 
-        {/* Already Have Account */}
+        {/* Login */}
         <p className="text-center mt-4 text-sm text-gray-400">
           Already Have an Account?{" "}
           <button
@@ -130,20 +129,23 @@ export default function SignupPage() {
         </p>
       </div>
 
-      {/* RIGHT SIDE */}
-      <div className="w-1/2 bg-[#f7f5ef] flex flex-col items-center py-16">
+      {/* RIGHT SIDE  */}
+      {/*  Hidden on mobile, shown on large screens */}
+      <div className="hidden lg:flex w-1/2 bg-[#f7f5ef] flex-col items-center py-16">
         <h1 className="text-4xl font-serif mb-2">Sign Up</h1>
         <h2 className="text-lg text-gray-700 mb-6">Step - 1</h2>
 
-        {/* Logo Section Box */}
+        {/* Logo */}
         <div className="border p-6 mt-4 w-52 h-52 flex flex-col items-center justify-center">
           <img src="/logo.png" alt="Zen Creation" className="w-24 mb-3" />
           <p className="text-center text-sm mt-2">
-            Zen Creation <br /> Inventory Management <br /> System
+            Zen Creation <br />
+            Inventory Management <br />
+            System
           </p>
         </div>
 
-        {/* Benefits List */}
+        {/* Benefits */}
         <div className="mt-10 space-y-6 w-4/5">
           <div>
             <h3 className="font-semibold">➜ Get Started</h3>
