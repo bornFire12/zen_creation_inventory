@@ -16,6 +16,7 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    navigate("/dashboard");
     console.log("Login Data:", formData);
   };
 
