@@ -4,6 +4,10 @@ import SignupPage from "./pages/auth/SignupPage";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import NextSignup from "./pages/auth/NextSignup";
+import SecuritySettings from "./pages/Settings/SecuritySettings";
+import ProfileSetting from "./pages/Settings/ProfileSetting";
+import SettingsPage from "./pages/Settings/SettingsPage";
+import TeamPage from "./pages/dashboard/TeamPage";
 
 function App() {
   return (
@@ -13,6 +17,10 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/NextSignup" element={<NextSignup />} />
+        <Route path="/SecuritySettings" element={<SecuritySettings />} />
+        <Route path="/ProfileSetting" element={<ProfileSetting />} />
+        <Route path="/SettingsPage" element={<SettingsPage />} />
+        <Route path="/TeamPage" element={<TeamPage />} />
       </Routes>
     </Router>
   );
