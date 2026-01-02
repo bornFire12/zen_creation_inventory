@@ -1,5 +1,8 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import Layout from "../../components/layout/Layout";
+import { Plus, Search, MoreVertical, Edit, Trash2 } from "lucide-react";
+import HeaderUserCard from "../../components/HeaderUserCard";
 
 const initialTeamMembers = [
   {
@@ -32,154 +35,145 @@ const initialTeamMembers = [
   },
 ];
 
-export default function TeamPage() {
-  const navigate = useNavigate();
+const TeamPage = () => {
   const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Remove member
-  const handleRemove = (id) => {
-    const filtered = teamMembers.filter((member) => member.id !== id);
-    setTeamMembers(filtered);
-  };
+  // Simulate API call
+  useEffect(() => {
+    setLoading(true);
+    // In a real app, you would fetch team data here
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  // Filtered team members by search
   const filteredMembers = teamMembers.filter((member) =>
     member.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleRemove = (id) => {
+    if (window.confirm("Are you sure you want to remove this team member?")) {
+      setTeamMembers(teamMembers.filter((member) => member.id !== id));
+    }
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-neutral-200">
-      {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-neutral-100 p-6">
-        <h1
-          className="text-xl font-bold mb-8 cursor-pointer"
-          onClick={() => navigate("/")}
-        >
-          ZC
-        </h1>
+    <Layout>
+      <HeaderUserCard />
 
-        <nav className="space-y-4 text-sm">
-          <p className="font-semibold text-neutral-500">Menu</p>
-          <ul className="space-y-2">
-            <li
-              className="text-neutral-700 cursor-pointer"
-              onClick={() => navigate("/dashboard")}
-            >
-              Dashboard
-            </li>
-            <li
-              className="text-neutral-700 cursor-pointer"
-              onClick={() => navigate("/stocks")}
-            >
-              Stocks
-            </li>
-            <li
-              className="text-neutral-700 cursor-pointer"
-              onClick={() => navigate("/investment")}
-            >
-              Investment
-            </li>
-            <li
-              className="text-neutral-700 cursor-pointer"
-              onClick={() => navigate("/sales")}
-            >
-              Sales
-            </li>
-            <li
-              className="font-semibold text-black cursor-pointer"
-              onClick={() => navigate("/team")}
-            >
-              Team
-            </li>
-          </ul>
-
-          <p className="font-semibold text-neutral-500 mt-6">General</p>
-          <ul className="space-y-2">
-            <li className="cursor-pointer">Setting</li>
-            <li className="cursor-pointer">Help</li>
-            <li className="cursor-pointer">Logout</li>
-          </ul>
-        </nav>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-6 md:p-8">
-        {/* Top Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between bg-neutral-100 p-4 rounded-lg mb-6">
-          <div className="flex items-center gap-3">
-            <img
-              src="https://randomuser.me/api/portraits/men/75.jpg"
-              alt="user"
-              className="w-10 h-10 rounded-full"
-            />
-            <div>
-              <p className="font-semibold">Prason Tuliadhar</p>
-              <p className="text-xs text-neutral-500">Admin</p>
+      <div className="bg-[#E1E1DC] dark:bg-[#43433F] p-5.5 rounded-xl">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold">Team Management</h1>
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search team..."
+                className="pl-10 pr-4 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <Search
+                className="absolute left-3 top-2.5 text-gray-400"
+                size={18}
+              />
             </div>
+            <Link
+              to="/add-team-member"
+              className="bg-yellow-300 hover:bg-yellow-400 text-[#22231F] px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            >
+              <Plus size={18} />
+              Add Member
+            </Link>
           </div>
-
-          <span className="mt-2 md:mt-0 bg-red-500 text-white text-xs px-3 py-1 rounded">
-            Dark
-          </span>
         </div>
 
-        {/* Team Section */}
-        <section className="bg-neutral-100 p-6 rounded-lg">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-4">
-            <h2 className="font-semibold text-lg mb-2 md:mb-0">Team</h2>
-            <span className="text-sm text-neutral-500 cursor-pointer">
-              🔔 Notification
-            </span>
-          </div>
-
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search members"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full md:w-64 px-4 py-2 mb-6 rounded-full border text-sm outline-none"
-          />
-
-          {/* Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMembers.length === 0 ? (
-              <p className="text-neutral-500">No team members found.</p>
-            ) : (
-              filteredMembers.map((member) => (
-                <div
-                  key={member.id}
-                  className="flex flex-col sm:flex-row items-center gap-4 bg-white p-4 rounded-lg shadow-sm"
-                >
+        {/* Team Members Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+          {filteredMembers.map((member) => (
+            <div
+              key={member.id}
+              className="bg-[#FBFBF5] dark:bg-[#22231F] p-5 rounded-xl hover:shadow-md transition-shadow"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex items-center space-x-4">
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="w-24 h-24 rounded object-cover"
+                    className="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
                   />
-
-                  <div className="flex-1 text-sm text-center sm:text-left">
-                    <p className="font-semibold">Name: {member.name}</p>
-                    <p className="text-neutral-500">
-                      Designation: {member.role}
+                  <div>
+                    <h3 className="font-semibold text-lg">{member.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {member.role}
                     </p>
-                    <p className="text-neutral-500">
-                      Joining: {member.joining}
-                    </p>
+                    <span className="inline-block mt-1 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                      {member.joining}
+                    </span>
                   </div>
-
-                  <button
-                    onClick={() => handleRemove(member.id)}
-                    className="mt-2 sm:mt-0 bg-red-500 text-white text-xs px-3 py-1 rounded"
-                  >
-                    Remove
-                  </button>
                 </div>
-              ))
-            )}
-          </div>
-        </section>
-      </main>
-    </div>
+                <div className="dropdown relative">
+                  <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+                    <MoreVertical size={20} />
+                  </button>
+                  <div className="dropdown-menu hidden absolute right-0 mt-2 w-40 bg-white dark:bg-[#333] rounded-md shadow-lg z-10">
+                    <button className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                      <Edit size={16} />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleRemove(member.id)}
+                      className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                    >
+                      <Trash2 size={16} />
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300">
+                  <span>Status</span>
+                  <span className="text-green-500 font-medium">Active</span>
+                </div>
+                <div className="mt-2 flex justify-between text-sm text-gray-600 dark:text-gray-300">
+                  <span>Last Active</span>
+                  <span>2 hours ago</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Layout>
   );
-}
+};
+
+export default TeamPage;
+
+// Add this CSS for the dropdown menu
+const styles = `
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+`;
+
+// Add the styles to the document head
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);

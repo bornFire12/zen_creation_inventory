@@ -1,5 +1,12 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { ThemeProvider } from "./components/layout/ThemeProvider";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import SignupPage from "./pages/auth/SignupPage";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -8,21 +15,114 @@ import SecuritySettings from "./pages/Settings/SecuritySettings";
 import ProfileSetting from "./pages/Settings/ProfileSetting";
 import SettingsPage from "./pages/Settings/SettingsPage";
 import TeamPage from "./pages/dashboard/TeamPage";
+import Dashboard from "./pages/dashboard/dashboard";
+import Stocks from "./pages/stocks/Stocks";
+import Investment from "./pages/investment/Investment";
+import Sales from "./pages/sales/Sales";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+// Wrapper component to use useAuth hook
+const AppRoutes = () => {
+  const { user } = useAuth();
+
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route
+        path="/login"
+        element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+      />
+      <Route path="/NextSignup" element={<NextSignup />} />
+
+      {/* Protected Routes */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <SecuritySettings />
+          </ProtectedRoute>
+        }
+        path="/SecuritySettings"
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <ProfileSetting />
+          </ProtectedRoute>
+        }
+        path="/ProfileSetting"
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        }
+        path="/settings"
+      />
+      <Route
+        path="/SettingsPage"
+        element={<Navigate to="/settings" replace />}
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <TeamPage />
+          </ProtectedRoute>
+        }
+        path="/team"
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+        path="/dashboard"
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <Stocks />
+          </ProtectedRoute>
+        }
+        path="/stocks"
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <Investment />
+          </ProtectedRoute>
+        }
+        path="/investment"
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <Sales />
+          </ProtectedRoute>
+        }
+        path="/sales"
+      />
+
+      {/* Catch all other routes */}
+      <Route
+        path="*"
+        element={<Navigate to={user ? "/dashboard" : "/login"} replace />}
+      />
+    </Routes>
+  );
+};
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/NextSignup" element={<NextSignup />} />
-        <Route path="/SecuritySettings" element={<SecuritySettings />} />
-        <Route path="/ProfileSetting" element={<ProfileSetting />} />
-        <Route path="/SettingsPage" element={<SettingsPage />} />
-        <Route path="/TeamPage" element={<TeamPage />} />
-      </Routes>
-    </Router>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
