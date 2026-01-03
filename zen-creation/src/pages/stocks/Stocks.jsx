@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import HeaderUserCard from "../../components/HeaderUserCard";
 import { Bell, Search, Plus, Eye, Trash2, X } from "lucide-react";
@@ -16,6 +17,9 @@ import InventoryModal from "./InventoryModel";
  */
 
 export default function Stocks() {
+  // Navigation
+  const navigate = useNavigate();
+
   // UI State
   const [open, setOpen] = useState(false);
   const [openStatusModal, setOpenStatusModal] = useState(false);
@@ -272,7 +276,11 @@ export default function Stocks() {
                         className="text-green-600 cursor-pointer"
                         onClick={() => handleOpenAddInventory(row)}
                       />
-                      <Eye size={24} className="text-blue-600 cursor-pointer" />
+                      <Eye
+                        size={24}
+                        className="text-blue-600 cursor-pointer hover:text-blue-800"
+                        onClick={() => navigate(`/stocks/preview/${row.id}`)}
+                      />
                       <Trash2
                         size={24}
                         className="text-red-600 cursor-pointer"
