@@ -11,19 +11,19 @@ import SignupPage from "./pages/auth/SignupPage";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import NextSignup from "./pages/auth/NextSignup";
+import Dashboard from "./pages/dashboard/Dashboard";
+import Investment from "./pages/investment/Investment";
+import Sales from "./pages/sales/Sales";
+import Stocks from "./pages/stocks/Stocks";
 import SecuritySettings from "./pages/Settings/SecuritySettings";
 import ProfileSetting from "./pages/Settings/ProfileSetting";
 import SettingsPage from "./pages/Settings/SettingsPage";
 import TeamPage from "./pages/dashboard/TeamPage";
-import Dashboard from "./pages/dashboard/dashboard";
-import Stocks from "./pages/stocks/Stocks";
 import StockPreview from "./pages/stocks/StockPreview";
-import Investment from "./pages/investment/Investment";
-import Sales from "./pages/sales/Sales";
 import ProtectedRoute from "./components/ProtectedRoute";
-import SalesPage from "./pages/stocks/SalesPage";
+import AddTeam from "./pages/Dashboard/AddTeam";
+
 import NotificationSetting from "./pages/Settings/NotificationSetting";
-import AddTeam from "./pages/dashboard/AddTeam";
 
 // Wrapper component to use useAuth hook
 const AppRoutes = () => {
@@ -98,14 +98,6 @@ const AppRoutes = () => {
       <Route
         path="*"
         element={<Navigate to={user ? "/dashboard" : "/login"} replace />}
-      />
-      <Route
-        element={
-          <ProtectedRoute>
-            <SalesPage />
-          </ProtectedRoute>
-        }
-        path="/sales-page"
       />
     </Routes>
   );

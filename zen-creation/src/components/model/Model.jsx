@@ -8,8 +8,7 @@ const StatusCardModal = ({ open, onClose, status, title, body }) => {
     } else {
       document.body.style.overflow = "";
     }
-
-    // ✅ Cleanup (important)
+    // Cleanup
     return () => {
       document.body.style.overflow = "";
     };
@@ -49,14 +48,12 @@ const StatusCardModal = ({ open, onClose, status, title, body }) => {
       >
         <div className="flex flex-col items-center">
           {style.icon}
-
           <div
             className={`${style.panel} w-full text-center p-3 rounded-lg font-semibold text-gray-900 mt-4 cursor-pointer`}
             onClick={onClose}
           >
             {title}
           </div>
-
           <p className="mt-3 text-center text-gray-800 text-sm">{body}</p>
         </div>
       </div>

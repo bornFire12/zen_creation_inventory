@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+.rdp-custom-selected {
+  background-color: #62625D !important;
+  color: white !important;
+}
+
+.rdp-custom-selected:hover {
+  background-color: #62625D !important;
+}
+
+.rdp-custom-today {
+  border: 1px solid #62625D;
+}
+
+.rdp-chevron {
+  fill: #62625D !important;
+}
+
+.dark .rdp-chevron {
+  fill: white !important;
+}

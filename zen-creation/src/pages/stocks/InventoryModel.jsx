@@ -12,6 +12,7 @@ const InventoryModal = ({ open, onClose, product, onAddItem }) => {
     description: "",
     image: "",
   };
+
   const [item, setItem] = useState(initalItem);
   const fileInputRef = useRef(null);
 
