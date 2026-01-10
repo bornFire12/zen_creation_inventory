@@ -22,6 +22,8 @@ import Investment from "./pages/investment/Investment";
 import Sales from "./pages/sales/Sales";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SalesPage from "./pages/stocks/SalesPage";
+import NotificationSetting from "./pages/Settings/NotificationSetting";
+import AddTeam from "./pages/dashboard/AddTeam";
 
 // Wrapper component to use useAuth hook
 const AppRoutes = () => {
@@ -38,34 +40,11 @@ const AppRoutes = () => {
       <Route path="/NextSignup" element={<NextSignup />} />
 
       {/* Protected Routes */}
-      <Route
-        element={
-          <ProtectedRoute>
-            <SecuritySettings />
-          </ProtectedRoute>
-        }
-        path="/SecuritySettings"
-      />
-      <Route
-        element={
-          <ProtectedRoute>
-            <ProfileSetting />
-          </ProtectedRoute>
-        }
-        path="/ProfileSetting"
-      />
-      <Route
-        element={
-          <ProtectedRoute>
-            <SettingsPage />
-          </ProtectedRoute>
-        }
-        path="/settings"
-      />
-      <Route
-        path="/SettingsPage"
-        element={<Navigate to="/settings" replace />}
-      />
+      <Route path="/settings" element={<SettingsPage />} />
+      <Route path="/settings/profile" element={<ProfileSetting />} />
+      <Route path="/settings/security" element={<SecuritySettings />} />
+      <Route path="/settings/notification" element={<NotificationSetting />} />
+      <Route path="/AddTeam" element={<AddTeam />} />
       <Route
         element={
           <ProtectedRoute>

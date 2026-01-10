@@ -93,8 +93,8 @@ const TeamPage = () => {
               />
             </div>
             <Link
-              to="/add-team-member"
-              className="bg-yellow-300 hover:bg-yellow-400 text-[#22231F] px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+              to="/AddTeam"
+              className="bg-[#b3b3b3] hover:bg-[#797979] text-[#22231F] px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
             >
               <Plus size={18} />
               Add Member
@@ -121,7 +121,10 @@ const TeamPage = () => {
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       {member.role}
                     </p>
-                    <span className="inline-block mt-1 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                    <span className="inline-block mt-1 text-xs bg-blue-100 text-blue-800 px-3 py-0.5 rounded-full">
+                      <p className="text-black font-bold padding-bottom: 2px;">
+                        Joining
+                      </p>
                       {member.joining}
                     </span>
                   </div>
@@ -145,16 +148,6 @@ const TeamPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300">
-                  <span>Status</span>
-                  <span className="text-green-500 font-medium">Active</span>
-                </div>
-                <div className="mt-2 flex justify-between text-sm text-gray-600 dark:text-gray-300">
-                  <span>Last Active</span>
-                  <span>2 hours ago</span>
-                </div>
-              </div>
             </div>
           ))}
         </div>
@@ -164,16 +157,3 @@ const TeamPage = () => {
 };
 
 export default TeamPage;
-
-// Add this CSS for the dropdown menu
-const styles = `
-  .dropdown:hover .dropdown-menu {
-    display: block;
-  }
-`;
-
-// Add the styles to the document head
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
