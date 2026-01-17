@@ -22,6 +22,7 @@ import TeamPage from "./pages/dashboard/TeamPage";
 import StockPreview from "./pages/stocks/StockPreview";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AddTeam from "./pages/Dashboard/AddTeam";
+import Help from "./pages/help/help";
 
 import NotificationSetting from "./pages/Settings/NotificationSetting";
 
@@ -45,6 +46,7 @@ const AppRoutes = () => {
       <Route path="/settings/security" element={<SecuritySettings />} />
       <Route path="/settings/notification" element={<NotificationSetting />} />
       <Route path="/AddTeam" element={<AddTeam />} />
+      <Route path="/help" element={<Help />} />
       <Route
         element={
           <ProtectedRoute>
@@ -70,12 +72,12 @@ const AppRoutes = () => {
         path="/stocks"
       />
       <Route
+        path="/stocks/preview/:id"
         element={
           <ProtectedRoute>
             <StockPreview />
           </ProtectedRoute>
         }
-        path="/stocks/preview/:id"
       />
       <Route
         element={

@@ -122,7 +122,7 @@ const LoginPage = () => {
               type="text"
               name="name"
               value={formData.name}
-              placeholder="Prason Ratna Tuladhar"
+              placeholder=""
               onChange={handleChange}
               disabled={isSubmitting}
             />

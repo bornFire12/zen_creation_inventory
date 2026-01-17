@@ -1,5 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import {
   LayoutDashboard,
   Layers,
@@ -10,8 +12,28 @@ import {
   HelpCircle,
   LogOut,
 } from "lucide-react";
-
+import { useAuth } from "../context/AuthContext";
 const Sidebar = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = async (e) => {
+    console.log("Logout button clicked", e); // Check if this logs when clicking
+    e.preventDefault(); // Prevent any default behavior
+    e.stopPropagation(); // Stop event bubbling
+
+    if (window.confirm("Are you sure you want to logout?")) {
+      console.log("User confirmed logout");
+      try {
+        console.log("Before logout");
+        await logout();
+        console.log("After logout");
+        navigate("/login");
+        window.location.reload();
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    }
+  };
   return (
     <aside className="w-64 bg-[#E1E1DC] dark:bg-[#43433F] m-5.5 p-4 mr-0 hidden lg:flex flex-col justify-between rounded-xl">
       {/* Logo */}
@@ -45,7 +67,13 @@ const Sidebar = () => {
 
           <SidebarItem icon={<Settings />} label="Setting" to="/settings" />
           <SidebarItem icon={<HelpCircle />} label="Help" to="/help" />
-          <SidebarItem icon={<LogOut />} label="Logout" to="/logout" />
+          <div
+            onClick={handleLogout}
+            className="flex items-center p-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer"
+          >
+            <LogOut className="w-5 h-5 mr-3" />
+            <span>Logout</span>
+          </div>
         </nav>
       </div>
     </aside>

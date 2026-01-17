@@ -1,8 +1,8 @@
-import { ImagePlus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
+import { ImagePlus, X } from "lucide-react";
+import { useRef as useReactRef } from "react";
 const InventoryModal = ({ open, onClose, product, onAddItem }) => {
-  const initalItem = {
+  const initialItem = {
     name: "",
     size: "",
     quantity: "",
@@ -13,7 +13,7 @@ const InventoryModal = ({ open, onClose, product, onAddItem }) => {
     image: "",
   };
 
-  const [item, setItem] = useState(initalItem);
+  const [item, setItem] = useState(initialItem);
   const fileInputRef = useRef(null);
 
   const totalValue = item.quantity * item.sellingPrice;
@@ -28,17 +28,20 @@ const InventoryModal = ({ open, onClose, product, onAddItem }) => {
   if (!open || !product) return null;
 
   const handleAdd = () => {
-    if (!isItemValid(item)) {
+    if (!item.name) {
+      toast.error("Please enter item name");
       return;
     }
-
-    onAddItem(product.id, {
+    const newItem = {
       ...item,
-      totalValue,
-      profit,
-    });
-    setItem(initalItem);
-    onClose(); // close modal
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      // Include the image in the new item
+      image: item.image || null,
+      // Rest of the item properties...
+    };
+    onAddItem(newItem);
+    setItem(initialItem);
   };
 
   const isItemValid = (data) => {
@@ -49,16 +52,16 @@ const InventoryModal = ({ open, onClose, product, onAddItem }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setItem((prev) => ({
-        ...prev,
-        image: reader.result, // base64 preview
-      }));
-    };
-    reader.readAsDataURL(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setItem({
+          ...item,
+          image: reader.result, // This will be a base64 string of the image
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleImageClick = () => {

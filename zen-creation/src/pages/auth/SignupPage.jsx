@@ -40,7 +40,7 @@ export default function SignupPage() {
             <input
               className="w-full p-3 border bg-black border-gray-600 text-white rounded"
               name="name"
-              placeholder="Prason Ratna Tuladhar"
+              placeholder=""
               value={formData.name}
               onChange={handleChange}
               required
@@ -86,7 +86,7 @@ export default function SignupPage() {
               className="w-full p-3 border bg-black border-gray-600 text-white rounded"
               name="email"
               type="email"
-              placeholder="prason@gmail.com"
+              placeholder=""
               value={formData.email}
               onChange={handleChange}
               required
@@ -100,7 +100,7 @@ export default function SignupPage() {
               className="w-full p-3 border bg-black border-gray-600 text-white rounded"
               name="contactNumber"
               type="tel"
-              placeholder="9808975989"
+              placeholder=""
               value={formData.contactNumber}
               onChange={handleChange}
               required

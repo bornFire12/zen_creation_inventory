@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import HeaderUserCard from "../../components/HeaderUserCard";
 import { Bell, Search, Plus, Eye, Trash2, X } from "lucide-react";
+import { toast } from "react-hot-toast";
 import SeriesAreaChart from "../../components/chart/SeriesAreaChart";
-import StatusCardModal from "../../components/model/Model";
+
 import InventoryModal from "./InventoryModel";
 
 // Define types for better code completion
@@ -19,111 +20,21 @@ import InventoryModal from "./InventoryModel";
 export default function Stocks() {
   // Navigation
   const navigate = useNavigate();
+  const { id } = useParams();
 
   // UI State
   const [open, setOpen] = useState(false);
-  const [openStatusModal, setOpenStatusModal] = useState(false);
-  const [openProductRemoveStatusModal, setOpenProductRemoveStatusModal] =
-    useState(false);
-  const [openItemStatusModal, setOpenItemStatusModal] = useState(false);
+
   const [openAddInventory, setOpenAddInventory] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
+  const [stockItem, setStockItem] = useState(null);
+  const [inventoryItems, setInventoryItems] = useState([]);
   // Data State
   const [stockTable, setStockTable] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch stock data from API
-  useEffect(() => {
-    const fetchStockData = async () => {
-      setIsLoading(true);
-      try {
-        // Replace with your actual API endpoint
-        // const response = await fetch('/api/stocks');
-        // if (!response.ok) throw new Error('Failed to fetch stock data');
-        // const data = await response.json();
-        // setStockTable(data);
-
-        // Mock data - remove this when API is ready
-        setStockTable([
-          { id: "001", name: "Cap", variety: 2, items: [] },
-          { id: "002", name: "Shoes", variety: 1, items: [] },
-        ]);
-      } catch (err) {
-        console.error("Error fetching stock data:", err);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchStockData();
-  }, []);
-
-  const handleOpenAddInventory = (row) => {
-    setSelectedProduct(row);
-    setOpenAddInventory(true);
-  };
-
-  /**
-   * Add a new product to stock
-   * @param {Object} product - The product to add
-   * @param {string} product.name - Name of the product
-   * @param {number} product.variety - Number of variants
-   */
-  const handleAddProduct = async ({ name, variety }) => {
-    try {
-      setIsLoading(true);
-      // Example API call - uncomment and modify when your API is ready
-      /*
-      const response = await fetch('/api/stocks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, variety })
-      });
-      
-      if (!response.ok) throw new Error('Failed to add product');
-      const newProduct = await response.json();
-      */
-
-      // Mock implementation - remove when API is ready
-      const nextId = String(stockTable.length + 1).padStart(3, "0");
-      const newProduct = {
-        id: nextId,
-        name,
-        variety,
-        items: [],
-      };
-
-      setStockTable((prev) => [...prev, newProduct]);
-      return { success: true, data: newProduct };
-    } catch (err) {
-      console.error("Error adding product:", err);
-      setError(err.message);
-      return { success: false, error: err.message };
-    } finally {
-      setIsLoading(false);
-    }
-    setOpen(false);
-    setOpenStatusModal(true);
-  };
-
-  const handleRemoveProduct = (productId) => {
-    setStockTable((prev) => prev.filter((product) => product.id !== productId));
-
-    setOpenProductRemoveStatusModal(true);
-  };
-
-  const handleAddInventoryItem = (productId, newItem) => {
-    setStockTable((prev) =>
-      prev.map((p) =>
-        p.id === productId ? { ...p, items: [...p.items, newItem] } : p
-      )
-    );
-    setOpenItemStatusModal(true);
-  };
-
+  // Chart Data
   const areaData = [
     { year: "2021", shoes: 800, cap: 400, belt: 300, jackets: 500 },
     { year: "2022", shoes: 900, cap: 450, belt: 350, jackets: 600 },
@@ -166,6 +77,164 @@ export default function Stocks() {
       time: "50 Mins Ago",
     },
   ];
+
+  // Fetch stock data from API
+  useEffect(() => {
+    const fetchStockItem = () => {
+      try {
+        setIsLoading(true); // Changed from setLoading to setIsLoading
+        const savedData = JSON.parse(localStorage.getItem("stockData")) || [];
+        const item = savedData.find((item) => item.id === id);
+        if (item) {
+          setStockItem(item);
+          setInventoryItems(item.items || []);
+        } else {
+          setError("Product not found");
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false); // Changed from setLoading to setIsLoading
+      }
+    };
+    fetchStockItem();
+  }, [id]);
+  useEffect(() => {
+    const loadStockData = () => {
+      try {
+        setIsLoading(true);
+        const savedData = JSON.parse(localStorage.getItem("stockData"));
+
+        if (savedData && savedData.length > 0) {
+          setStockTable(savedData);
+        } else {
+          // Initialize with default data if no saved data exists
+          const defaultData = [
+            { id: "001", name: "Cap", variety: 2, items: [] },
+            { id: "002", name: "Shoes", variety: 1, items: [] },
+          ];
+          setStockTable(defaultData);
+          localStorage.setItem("stockData", JSON.stringify(defaultData));
+        }
+      } catch (err) {
+        console.error("Error loading stock data:", err);
+        setError("Failed to load stock data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    // Only load data if we're not in a specific product view (when id is not present)
+    if (!id) {
+      loadStockData();
+    }
+  }, [id]);
+  // In Stocks.jsx
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem("stockData"));
+    if (savedData) {
+      setStockTable(savedData);
+    } else {
+      // Initialize with default data if no saved data exists
+      setStockTable(initialStockData);
+      localStorage.setItem("stockData", JSON.stringify(initialStockData));
+    }
+  }, []);
+  const handleAddInventoryItem = (productId, newItem) => {
+    setStockTable((prev) => {
+      const updated = prev.map((product) => {
+        if (product.id === productId) {
+          const updatedItems = [...(product.items || []), newItem];
+          return {
+            ...product,
+            items: updatedItems,
+            variety: updatedItems.length,
+            // Update the main product details with the latest item's data
+            ...(newItem.size && { size: newItem.size }),
+            ...(newItem.color && { color: newItem.color }),
+            ...(newItem.quantity && { quantity: newItem.quantity }),
+            ...(newItem.purchasePrice && {
+              purchasePrice: newItem.purchasePrice,
+            }),
+            ...(newItem.sellingPrice && { sellingPrice: newItem.sellingPrice }),
+            ...(newItem.description && { description: newItem.description }),
+            ...(newItem.image && { image: newItem.image }),
+          };
+        }
+        return product;
+      });
+
+      localStorage.setItem("stockData", JSON.stringify(updated));
+      window.dispatchEvent(
+        new CustomEvent("stockDataUpdated", {
+          detail: { productId, updatedData: updated },
+        })
+      );
+      toast.success("Item added successfully!");
+      return updated;
+    });
+  };
+
+  /**
+   * Add a new product to stock
+   * @param {Object} product - The product to add
+   * @param {string} product.name - Name of the product
+   * @param {number} product.variety - Number of variants
+   */
+  const handleAddProduct = async ({ name, variety }) => {
+    const newProduct = {
+      id: Date.now().toString(),
+      name,
+      variety: parseInt(variety) || 0,
+      items: [],
+    };
+    setStockTable((prev) => {
+      const updated = [...prev, newProduct];
+      // Save to localStorage
+      localStorage.setItem("stockData", JSON.stringify(updated));
+      return updated;
+    });
+    // Close the modal
+    setOpen(false);
+  };
+
+  const handleRemoveProduct = (productId) => {
+    setStockTable((prev) => {
+      const updated = prev.filter((product) => product.id !== productId);
+      // Save to localStorage
+      localStorage.setItem("stockData", JSON.stringify(updated));
+      // Notify other components
+      window.dispatchEvent(new Event("stockDataUpdated"));
+      return updated;
+    });
+  };
+
+  const handleAddItem = (productId, newItem) => {
+    setStockTable((prev) => {
+      const updated = prev.map((product) => {
+        if (product.id === productId) {
+          const updatedItems = [...(product.items || []), newItem];
+          // If this is the current product being viewed, update inventoryItems
+          if (id === productId) {
+            setInventoryItems(updatedItems);
+          }
+          return {
+            ...product,
+            items: updatedItems,
+            variety: updatedItems.length,
+          };
+        }
+        return product;
+      });
+      // Save to localStorage
+      localStorage.setItem("stockData", JSON.stringify(updated));
+
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new Event("stockDataUpdated"));
+
+      return updated;
+    });
+  };
 
   return (
     <Layout>
@@ -228,14 +297,6 @@ export default function Stocks() {
             onAdd={handleAddProduct}
             nextSN={String(stockTable.length + 1).padStart(3, "0")}
           />
-
-          <StatusCardModal
-            open={openStatusModal}
-            onClose={() => setOpenStatusModal(false)}
-            status="success"
-            title="Product Added Successfully"
-            body="The product has been added to stock inventory."
-          />
         </div>
 
         {/* Stock Table */}
@@ -274,12 +335,21 @@ export default function Stocks() {
                       <Plus
                         size={24}
                         className="text-green-600 cursor-pointer"
-                        onClick={() => handleOpenAddInventory(row)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent row click
+                          setSelectedProduct(row); // Make sure you have this state: const [selectedProduct, setSelectedProduct] = useState(null);
+                          setOpenAddInventory(true); // Make sure you have this state: const [openAddInventory, setOpenAddInventory] = useState(false);
+                        }}
                       />
                       <Eye
                         size={24}
                         className="text-blue-600 cursor-pointer hover:text-blue-800"
-                        onClick={() => navigate(`/stocks/preview/${row.id}`)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          navigate(`/stocks/preview/${row.id}`, {
+                            replace: true,
+                          });
+                        }}
                       />
                       <Trash2
                         size={24}
@@ -298,20 +368,6 @@ export default function Stocks() {
             onClose={() => setOpenAddInventory(false)}
             product={selectedProduct}
             onAddItem={handleAddInventoryItem}
-          />
-          <StatusCardModal
-            open={openItemStatusModal}
-            onClose={() => setOpenItemStatusModal(false)}
-            status="success"
-            title="Item Added Successfully"
-            body="Item has been added Successfully to your Cap Inventory. Click the preview icon to browse your added item."
-          />
-          <StatusCardModal
-            open={openProductRemoveStatusModal}
-            onClose={() => setOpenProductRemoveStatusModal(false)}
-            status="cancel"
-            title="Product Removed Successfully"
-            body="You have successfully removed the product."
           />
         </div>
 
@@ -352,6 +408,22 @@ export default function Stocks() {
           </div>
         </div>
       </div>
+
+      {/* Add Inventory Modal */}
+      {openAddInventory && selectedProduct && (
+        <InventoryModal
+          open={openAddInventory}
+          onClose={() => {
+            setOpenAddInventory(false);
+            setSelectedProduct(null);
+          }}
+          onAddItem={(newItem) => {
+            handleAddInventoryItem(selectedProduct.id, newItem);
+            setOpenAddInventory(false);
+          }}
+          product={selectedProduct}
+        />
+      )}
     </Layout>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import {
@@ -14,7 +15,6 @@ import {
 import HeaderUserCard from "../../components/HeaderUserCard";
 import SeriesAreaChart from "../../components/chart/SeriesAreaChart";
 import DonutChart from "../../components/chart/DonutChart";
-import { useAuth } from "../../context/AuthContext";
 
 /* =========================
    STATIC DATA (API READY)
@@ -170,6 +170,7 @@ export default function Dashboard() {
   }));
 
   const { areaData, areaKeys, areaColors, pieData } = analytics;
+  const { logout } = useAuth();
 
   return (
     <Layout>
@@ -184,8 +185,9 @@ export default function Dashboard() {
             <LogOut
               className="w-6 h-6 cursor-pointer text-gray-600 hover:text-gray-900"
               onClick={() => {
-                const { logout } = useAuth();
-                logout();
+                if (window.confirm("Are you sure you want to logout?")) {
+                  logout();
+                }
               }}
             />
           </div>
