@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ThemeProvider } from "./components/layout/ThemeProvider";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import SignupPage from "./pages/auth/SignupPage";
@@ -23,16 +24,31 @@ import StockPreview from "./pages/stocks/StockPreview";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AddTeam from "./pages/Dashboard/AddTeam";
 import Help from "./pages/help/help";
+import RouteTracker from "./context/RouteTracker";
 
 import NotificationSetting from "./pages/Settings/NotificationSetting";
 
 // Wrapper component to use useAuth hook
 const AppRoutes = () => {
-  const { user } = useAuth();
-
+  const { user, lastVisitedPath } = useAuth();
+  const location = useLocation();
+  // Handle initial render redirect
+  if (location.pathname === "/" && user) {
+    return <Navigate to={lastVisitedPath || "/dashboard"} replace />;
+  }
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route
+        path="/"
+        element={
+          user ? (
+            <Navigate to={lastVisitedPath || "/dashboard"} replace />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route path="/home" element={<HomePage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route
         path="/login"
@@ -110,7 +126,9 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <AppRoutes />
+          <RouteTracker>
+            <AppRoutes />
+          </RouteTracker>
         </Router>
       </AuthProvider>
     </ThemeProvider>
