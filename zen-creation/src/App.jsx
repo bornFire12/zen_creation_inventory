@@ -22,7 +22,7 @@ import SettingsPage from "./pages/Settings/SettingsPage";
 import TeamPage from "./pages/dashboard/TeamPage";
 import StockPreview from "./pages/stocks/StockPreview";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AddTeam from "./pages/Dashboard/AddTeam";
+import AddTeam from "./pages/dashboard/AddTeam";
 import Help from "./pages/help/help";
 import RouteTracker from "./context/RouteTracker";
 import ForgotPassword from "./pages/auth/ForgotPassword";
