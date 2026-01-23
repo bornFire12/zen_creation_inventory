@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -182,7 +183,7 @@ const LoginPage = () => {
           </button>
 
           <button className="text-gray-700 hover:underline">
-            Forgot Password ?
+            <Link to="/forgot-password">Forgot Password ?</Link>
           </button>
         </div>
       </div>

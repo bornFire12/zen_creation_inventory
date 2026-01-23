@@ -25,6 +25,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AddTeam from "./pages/Dashboard/AddTeam";
 import Help from "./pages/help/help";
 import RouteTracker from "./context/RouteTracker";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 import NotificationSetting from "./pages/Settings/NotificationSetting";
 
@@ -63,6 +64,7 @@ const AppRoutes = () => {
       <Route path="/settings/notification" element={<NotificationSetting />} />
       <Route path="/AddTeam" element={<AddTeam />} />
       <Route path="/help" element={<Help />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
         element={
           <ProtectedRoute>
