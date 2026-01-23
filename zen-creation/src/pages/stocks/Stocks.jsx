@@ -53,22 +53,22 @@ export default function Stocks() {
   const activities = [
     {
       text: "350 Red Caps Added in Stock",
-      addedBy: "Rashik Tuladhar",
+      addedBy: "Nabin Joshi",
       time: "10 Mins Ago",
     },
     {
       text: "121 Shoes Added in Stock",
-      addedBy: "Rashik Tuladhar",
+      addedBy: "Nabin Joshi",
       time: "20 Mins Ago",
     },
     {
       text: "50 Red Belts Added in Stock",
-      addedBy: "Rashik Tuladhar",
+      addedBy: "Nabin Joshi",
       time: "30 Mins Ago",
     },
     {
       text: "21 Red Jackets Added in Stock",
-      addedBy: "Rashik Ratna Tuladhar",
+      addedBy: "Nabin Joshi",
       time: "40 Mins Ago",
     },
     {

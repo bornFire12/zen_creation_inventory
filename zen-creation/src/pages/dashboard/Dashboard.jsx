@@ -109,7 +109,7 @@ const teamArray = [
   },
   {
     id: 2,
-    name: "Rashik Ratna Tuladhar",
+    name: "Nabin Joshi",
     role: "Customer Handler",
     years: "2 Years",
     avatar: "https://i.pravatar.cc/100?img=2",

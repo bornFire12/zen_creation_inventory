@@ -57,7 +57,7 @@ export default function Dashboard() {
   const activities = [
     {
       text: "20 Trucker Cap Added in Stock",
-      addedBy: "Rashik Ratan Tuladhar",
+      addedBy: "Nabin Joshi",
       time: "10 mins ago",
     },
     {
@@ -85,7 +85,7 @@ export default function Dashboard() {
     avatar: "https://i.pravatar.cc/100?img=1",
   },
   {
-    name: "Rashik Ratna Tuladhar",
+    name: "Nabin Joshi",
     role: "Customer Handler",
     years: "2 Years",
     avatar: "https://i.pravatar.cc/100?img=2",
