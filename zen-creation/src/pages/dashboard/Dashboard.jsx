@@ -75,7 +75,7 @@ const activitiesArray = [
   {
     id: 1,
     text: "20 Trucker Cap Added in Stock",
-    addedBy: "Rashik Ratan Tuladhar",
+    addedBy: "Nabin Joshi",
     time: "10 mins ago",
   },
   {
