@@ -1,11 +1,11 @@
-// src/App.jsx
+import { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { ThemeProvider } from "./components/layout/ThemeProvider";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import SignupPage from "./pages/auth/SignupPage";
@@ -26,68 +26,110 @@ import AddTeam from "./pages/dashboard/AddTeam";
 import Help from "./pages/help/help";
 import RouteTracker from "./context/RouteTracker";
 import ForgotPassword from "./pages/auth/ForgotPassword";
-
 import NotificationSetting from "./pages/Settings/NotificationSetting";
 
-// Wrapper component to use useAuth hook
 const AppRoutes = () => {
-  const { user, lastVisitedPath } = useAuth();
+  const { user, lastVisitedPath, isInitialized } = useAuth();
   const location = useLocation();
-  // Handle initial render redirect
-  if (location.pathname === "/" && user) {
+
+  // Show loading state while auth is initializing
+  if (!isInitialized) {
+    return null; // or a loading spinner
+  }
+
+  // If user is not logged in and not on an auth page, redirect to login
+  if (
+    !user &&
+    !["/login", "/signup", "/forgot-password", "/"].includes(location.pathname)
+  ) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // If user is logged in and on the root path, redirect to last visited path or dashboard
+  if (user && location.pathname === "/") {
     return <Navigate to={lastVisitedPath || "/dashboard"} replace />;
   }
+
   return (
     <Routes>
       <Route
         path="/"
         element={
-          user ? (
-            <Navigate to={lastVisitedPath || "/dashboard"} replace />
-          ) : (
-            <Navigate to="/login" replace />
-          )
+          <Navigate
+            to={user ? lastVisitedPath || "/dashboard" : "/login"}
+            replace
+          />
         }
       />
       <Route path="/home" element={<HomePage />} />
-      <Route path="/signup" element={<SignupPage />} />
+      <Route
+        path="/signup"
+        element={user ? <Navigate to="/dashboard" replace /> : <SignupPage />}
+      />
       <Route
         path="/login"
         element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
       />
       <Route path="/NextSignup" element={<NextSignup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/help" element={<Help />} />
 
       {/* Protected Routes */}
-      <Route path="/settings" element={<SettingsPage />} />
-      <Route path="/settings/profile" element={<ProfileSetting />} />
-      <Route path="/settings/security" element={<SecuritySettings />} />
-      <Route path="/settings/notification" element={<NotificationSetting />} />
-      <Route path="/AddTeam" element={<AddTeam />} />
-      <Route path="/help" element={<Help />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings/profile"
+        element={
+          <ProtectedRoute>
+            <ProfileSetting />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings/security"
+        element={
+          <ProtectedRoute>
+            <SecuritySettings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings/notification"
+        element={
+          <ProtectedRoute>
+            <NotificationSetting />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/team"
         element={
           <ProtectedRoute>
             <TeamPage />
           </ProtectedRoute>
         }
-        path="/team"
       />
       <Route
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         }
-        path="/dashboard"
       />
       <Route
+        path="/stocks"
         element={
           <ProtectedRoute>
             <Stocks />
           </ProtectedRoute>
         }
-        path="/stocks"
       />
       <Route
         path="/stocks/preview/:id"
@@ -98,20 +140,28 @@ const AppRoutes = () => {
         }
       />
       <Route
+        path="/investment"
         element={
           <ProtectedRoute>
             <Investment />
           </ProtectedRoute>
         }
-        path="/investment"
       />
       <Route
+        path="/sales"
         element={
           <ProtectedRoute>
             <Sales />
           </ProtectedRoute>
         }
-        path="/sales"
+      />
+      <Route
+        path="/add-team"
+        element={
+          <ProtectedRoute>
+            <AddTeam />
+          </ProtectedRoute>
+        }
       />
 
       {/* Catch all other routes */}
